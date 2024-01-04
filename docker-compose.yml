@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  postgres:
-    image: 'postgres:latest'
+  data-postgres:
+    image: 'postgres:alpine'
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'password'
@@ -9,8 +9,8 @@ services:
       - 'pg-data:/var/lib/postgresql/data'
     ports:
       - '5432:5432'
-  
-  mysql:
+
+  data-mysql:
     image: 'mysql:latest'
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
@@ -19,32 +19,60 @@ services:
     ports:
       - '3306:3306'
 
-  redis:
-    image: 'redis:latest'
+  data-redis:
+    image: 'redis:alpine'
     ports:
       - '6379:6379'
-      
-  mongo:
+
+  data-mongo:
     image: 'mongo:latest'
     volumes:
       - 'mongo-data:/data/db'
     ports:
       - '27017:27017'
-  
-  elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.10.0'
+
+  mq-kafka:
+    image: 'bitnami/kafka:latest' # replace with the tag you want
     environment:
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - 'discovery.type=single-node'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: kafka-zookeeper:2181
     ports:
-      - '9200:9200' 
-  
-  mailhog:
+      - '9092:9092'
+    depends_on:
+      - kafka-zookeeper
+
+  kafka-zookeeper:
+    image: 'confluentinc/cp-zookeeper:latest' # replace with the tag you want
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+
+  mq-redpanda:
+    image: 'redpandadata/redpanda:latest'
+    privileged: true
+    environment:
+      REDPANDA_AUTO_CREATE_TOPICS: "true"
+      REDPANDA_DEFAULT_REPLICATION_FACTOR: 1
+      REDPANDA_LOG_LEVEL: info
+      REDPANDA_DEVELOPER_MODE: "true"
+    ports:
+      - "9093:9092"
+
+
+  mq-rabbitmq:
+    image: 'rabbitmq:3-management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  mailing-mailhog:
     image: 'mailhog/mailhog'
     ports:
       - '1025:1025'
       - '8025:8025'
-    
+
 volumes:
   pg-data:
   mysql-data:
