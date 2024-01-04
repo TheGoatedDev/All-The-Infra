@@ -62,7 +62,7 @@ services:
 
 
   mq-rabbitmq:
-    image: 'rabbitmq:3-management'
+    image: 'rabbitmq:alpine'
     ports:
       - '5672:5672'
       - '15672:15672'
