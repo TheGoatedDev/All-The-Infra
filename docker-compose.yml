@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+    volumes:
+      - 'pg-data:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
+  
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+    volumes:
+      - 'mysql-data:/var/lib/mysql'
+    ports:
+      - '3306:3306'
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+      
+  mongo:
+    image: 'mongo:latest'
+    volumes:
+      - 'mongo-data:/data/db'
+    ports:
+      - '27017:27017'
+  
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.10.0'
+    environment:
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - 'discovery.type=single-node'
+    ports:
+      - '9200:9200' 
+  
+  mailhog:
+    image: 'mailhog/mailhog'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    
+volumes:
+  pg-data:
+  mysql-data:
+  mongo-data:
