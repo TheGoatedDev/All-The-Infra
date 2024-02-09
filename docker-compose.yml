@@ -2,6 +2,7 @@ version: '3.8'
 services:
   data-postgres:
     image: 'postgres:alpine'
+    restart: always
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'password'
@@ -31,23 +32,18 @@ services:
     ports:
       - '27017:27017'
 
-  mq-kafka:
-    image: 'bitnami/kafka:latest' # replace with the tag you want
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: kafka-zookeeper:2181
+  data-influxdb:
+    image: influxdb:alpine
     ports:
-      - '9092:9092'
-    depends_on:
-      - kafka-zookeeper
-
-  kafka-zookeeper:
-    image: 'confluentinc/cp-zookeeper:latest' # replace with the tag you want
+      - '8086:8086'
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: root
+      DOCKER_INFLUXDB_INIT_PASSWORD: password
+      DOCKER_INFLUXDB_INIT_ORG: my-org
+      DOCKER_INFLUXDB_INIT_BUCKET: my-bucket
+    volumes:
+      - influxdb_data:/var/lib/influxdb
 
   mq-redpanda:
     image: 'redpandadata/redpanda:latest'
@@ -58,7 +54,7 @@ services:
       REDPANDA_LOG_LEVEL: info
       REDPANDA_DEVELOPER_MODE: "true"
     ports:
-      - "9093:9092"
+      - "9092:9092"
 
 
   mq-rabbitmq:
@@ -77,3 +73,4 @@ volumes:
   pg-data:
   mysql-data:
   mongo-data:
+  influxdb_data:
