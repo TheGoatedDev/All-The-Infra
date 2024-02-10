@@ -1,11 +1,12 @@
 version: '3.8'
 services:
   data-postgres:
-    image: 'postgres:alpine'
-    restart: always
+    image: postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'password'
+      PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - 'pg-data:/var/lib/postgresql/data'
     ports:
@@ -13,6 +14,7 @@ services:
 
   data-mysql:
     image: 'mysql:latest'
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
     volumes:
@@ -22,11 +24,13 @@ services:
 
   data-redis:
     image: 'redis:alpine'
+    restart: unless-stopped
     ports:
       - '6379:6379'
 
   data-mongo:
     image: 'mongo:latest'
+    restart: unless-stopped
     volumes:
       - 'mongo-data:/data/db'
     ports:
@@ -34,6 +38,7 @@ services:
 
   data-influxdb:
     image: influxdb:alpine
+    restart: unless-stopped
     ports:
       - '8086:8086'
     environment:
@@ -47,6 +52,7 @@ services:
 
   mq-redpanda:
     image: 'redpandadata/redpanda:latest'
+    restart: unless-stopped
     privileged: true
     environment:
       REDPANDA_AUTO_CREATE_TOPICS: "true"
@@ -59,12 +65,14 @@ services:
 
   mq-rabbitmq:
     image: 'rabbitmq:alpine'
+    restart: unless-stopped
     ports:
       - '5672:5672'
       - '15672:15672'
 
   mailing-mailhog:
     image: 'mailhog/mailhog'
+    restart: unless-stopped
     ports:
       - '1025:1025'
       - '8025:8025'
