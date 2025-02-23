@@ -38,17 +38,9 @@ This infrastructure setup includes multiple services organized into different ca
 ### Monitoring Services
 | Service | Port | Purpose |
 |---------|------|---------|
-| Mimir | 9009 | Metrics storage and querying |
-| Loki | 3100 | Log aggregation |
-| Tempo | 3200 | Distributed tracing backend |
-| Tempo OTLP | 4317 | OpenTelemetry gRPC receiver |
-| Tempo OTLP HTTP | 4318 | OpenTelemetry HTTP receiver |
+| OpenTelemetry Collector | 4317 | OTLP gRPC receiver (main receiver for all telemetry) |
+| OpenTelemetry Collector | 4318 | OTLP HTTP receiver (main receiver for all telemetry) |
 | Grafana | 3000 | Monitoring dashboard UI |
-| OpenTelemetry Collector | 4317 | OTLP gRPC receiver (traces, metrics, logs) |
-| OpenTelemetry Collector | 4318 | OTLP HTTP receiver (traces, metrics, logs) |
-| OpenTelemetry Collector | 8888 | Prometheus metrics endpoint |
-| OpenTelemetry Collector | 8889 | Debug endpoint |
-| OpenTelemetry Collector | 13133 | Health check endpoint |
 
 ## Network Configuration
 
