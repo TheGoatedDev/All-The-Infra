@@ -1,0 +1,121 @@
+version: '3.8'
+services:
+  data-postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - 'pg-data:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - database-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  data-mysql:
+    image: 'mysql:latest'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'development'
+    volumes:
+      - 'mysql-data:/var/lib/mysql'
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - database-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  data-redis:
+    image: 'redis:alpine'
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis-data:/data'
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - database-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  data-mongo:
+    image: 'mongo:latest'
+    restart: unless-stopped
+    volumes:
+      - 'mongo-data:/data/db'
+    ports:
+      - '27017:27017'
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "'db.runCommand(\"ping\").ok'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - database-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  data-influxdb:
+    image: influxdb:alpine
+    restart: unless-stopped
+    ports:
+      - '8086:8086'
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: root
+      DOCKER_INFLUXDB_INIT_PASSWORD: password
+      DOCKER_INFLUXDB_INIT_ORG: my-org
+      DOCKER_INFLUXDB_INIT_BUCKET: my-bucket
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - database-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+networks:
+  database-network:
+    driver: bridge
+
+volumes:
+  pg-data:
+  mysql-data:
+  mongo-data:
+  influxdb_data:
+  redis-data: 

@@ -1,0 +1,95 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  # For collecting host metrics
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      network:
+      process:
+
+  # For Prometheus scraping
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "otel-collector"
+          scrape_interval: 10s
+          static_configs:
+            - targets: ["0.0.0.0:8888"]
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 1500
+
+  resourcedetection:
+    detectors: [env, system]
+    timeout: 2s
+
+  attributes:
+    actions:
+      - key: environment
+        value: "development"
+        action: insert
+
+exporters:
+  otlp/tempo:
+    endpoint: monitoring-tempo:4317
+    tls:
+      insecure: true
+
+  prometheus:
+    endpoint: monitoring-mimir:9009
+    namespace: otel
+    send_timestamps: true
+    metric_expiration: 180m
+
+  loki:
+    endpoint: http://monitoring-loki:3100/loki/api/v1/push
+    tenant_id: "default"
+    labels:
+      attributes:
+        container_name: ""
+        container_id: ""
+        service.name: ""
+        service.version: ""
+
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resourcedetection, attributes]
+      exporters: [otlp/tempo, debug]
+
+    metrics:
+      receivers: [otlp, hostmetrics, prometheus]
+      processors: [memory_limiter, batch, resourcedetection, attributes]
+      exporters: [prometheus, debug]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resourcedetection, attributes]
+      exporters: [loki, debug]
+
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888

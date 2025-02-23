@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  mailing-mailhog:
+    image: 'mailhog/mailhog'
+    restart: unless-stopped
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - mail-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+networks:
+  mail-network:
+    driver: bridge 
