@@ -5,7 +5,7 @@ services:
     volumes:
       - lgtm-data:/data
     ports:
-      - "3000:3000"
+      - "4316:3000"
       - "4317:4317"
       - "4318:4318"
     networks:
