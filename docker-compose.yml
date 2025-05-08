@@ -5,3 +5,4 @@ include:
   - docker-compose.queues.yml
   - docker-compose.mail.yml
   - docker-compose.monitoring.yml
+  - docker-compose.storage.yml

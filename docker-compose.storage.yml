@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  storage-minio:
+    image: 'minio/minio'
+    restart: unless-stopped
+    command: 'server /data --console-address ":9001"'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=password
+    networks:
+      - storage-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+networks:
+  storage-network:
+    driver: bridge 
