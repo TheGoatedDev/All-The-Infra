@@ -1,6 +1,7 @@
 version: '3.8'
 
 include:
+  - docker-compose.lazytainer.yml
   - docker-compose.databases.yml
   - docker-compose.queues.yml
   - docker-compose.mail.yml

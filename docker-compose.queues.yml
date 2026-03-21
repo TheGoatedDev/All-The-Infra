@@ -2,7 +2,6 @@ version: '3.8'
 services:
   mq-redpanda:
     image: 'redpandadata/redpanda:latest'
-    restart: unless-stopped
     command:
       - redpanda
       - start
@@ -18,8 +17,6 @@ services:
       REDPANDA_DEFAULT_REPLICATION_FACTOR: 1
       REDPANDA_LOG_LEVEL: info
       REDPANDA_DEVELOPER_MODE: "true"
-    ports:
-      - "9092:9092"
     volumes:
       - redpanda-data:/var/lib/redpanda/data
     healthcheck:
@@ -27,19 +24,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - queue-network
     deploy:
       resources:
         limits:
           memory: 1.5G
+    network_mode: service:lazytainer
+    depends_on:
+      - lazytainer
+    labels:
+      - "lazytainer.group=redpanda"
 
   mq-rabbitmq:
     image: 'rabbitmq:alpine'
-    restart: unless-stopped
-    ports:
-      - '5672:5672'
-      - '15672:15672'
     volumes:
       - 'rabbitmq-data:/var/lib/rabbitmq'
     healthcheck:
@@ -47,17 +43,50 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - queue-network
     deploy:
       resources:
         limits:
           memory: 512M
+    network_mode: service:lazytainer
+    depends_on:
+      - lazytainer
+    labels:
+      - "lazytainer.group=rabbitmq"
 
-networks:
-  queue-network:
-    driver: bridge
+  mq-nats:
+    image: 'nats:latest'
+    command:
+      - '-js'
+      - '-sd=/data/jetstream'
+    volumes:
+      - 'nats-data:/data/jetstream'
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    network_mode: service:lazytainer
+    depends_on:
+      - lazytainer
+    labels:
+      - "lazytainer.group=nats"
+
+  nats-box:
+    image: 'natsio/nats-box:latest'
+    restart: "no"
+    entrypoint: ["/bin/sh"]
+    command: ["-c", "tail -f /dev/null"]
+    profiles:
+      - tools
+    network_mode: service:lazytainer
+    depends_on:
+      - lazytainer
 
 volumes:
   redpanda-data:
-  rabbitmq-data: 
+  rabbitmq-data:
+  nats-data:

@@ -1,0 +1,89 @@
+version: '3.8'
+services:
+  lazytainer:
+    image: ghcr.io/vmorganp/lazytainer:master
+    environment:
+      - VERBOSE=false
+    ports:
+      # Databases
+      - "5432:5432"
+      - "3306:3306"
+      - "6379:6379"
+      - "27017:27017"
+      - "8086:8086"
+      - "8123:8123"
+      # Queues
+      - "9092:9092"
+      - "5672:5672"
+      - "15672:15672"
+      - "4222:4222"
+      - "8222:8222"
+      - "6222:6222"
+      # Mail
+      - "1025:1025"
+      - "8025:8025"
+      # Monitoring (Grafana internal port is 3000, exposed as 4316)
+      - "4316:3000"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      # Postgres
+      - "lazytainer.group.postgres.ports=5432"
+      - "lazytainer.group.postgres.sleepMethod=stop"
+      - "lazytainer.group.postgres.inactiveTimeout=1800"
+      # MySQL
+      - "lazytainer.group.mysql.ports=3306"
+      - "lazytainer.group.mysql.sleepMethod=stop"
+      - "lazytainer.group.mysql.inactiveTimeout=1800"
+      # Redis
+      - "lazytainer.group.redis.ports=6379"
+      - "lazytainer.group.redis.sleepMethod=stop"
+      - "lazytainer.group.redis.inactiveTimeout=1800"
+      # MongoDB
+      - "lazytainer.group.mongo.ports=27017"
+      - "lazytainer.group.mongo.sleepMethod=stop"
+      - "lazytainer.group.mongo.inactiveTimeout=1800"
+      # InfluxDB
+      - "lazytainer.group.influxdb.ports=8086"
+      - "lazytainer.group.influxdb.sleepMethod=stop"
+      - "lazytainer.group.influxdb.inactiveTimeout=1800"
+      # ClickHouse (HTTP only, native port 9000 not proxied)
+      - "lazytainer.group.clickhouse.ports=8123"
+      - "lazytainer.group.clickhouse.sleepMethod=stop"
+      - "lazytainer.group.clickhouse.inactiveTimeout=1800"
+      # Redpanda
+      - "lazytainer.group.redpanda.ports=9092"
+      - "lazytainer.group.redpanda.sleepMethod=stop"
+      - "lazytainer.group.redpanda.inactiveTimeout=1800"
+      # RabbitMQ
+      - "lazytainer.group.rabbitmq.ports=5672,15672"
+      - "lazytainer.group.rabbitmq.sleepMethod=stop"
+      - "lazytainer.group.rabbitmq.inactiveTimeout=1800"
+      # NATS
+      - "lazytainer.group.nats.ports=4222,8222,6222"
+      - "lazytainer.group.nats.sleepMethod=stop"
+      - "lazytainer.group.nats.inactiveTimeout=1800"
+      # MailHog
+      - "lazytainer.group.mailhog.ports=1025,8025"
+      - "lazytainer.group.mailhog.sleepMethod=stop"
+      - "lazytainer.group.mailhog.inactiveTimeout=1800"
+      # LGTM (Grafana on internal port 3000, OTLP on 4317/4318)
+      - "lazytainer.group.lgtm.ports=3000,4317,4318"
+      - "lazytainer.group.lgtm.sleepMethod=stop"
+      - "lazytainer.group.lgtm.inactiveTimeout=1800"
+
+  lazytainer-storage:
+    image: ghcr.io/vmorganp/lazytainer:master
+    environment:
+      - VERBOSE=false
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "lazytainer.group.minio.ports=9000,9001"
+      - "lazytainer.group.minio.sleepMethod=stop"
+      - "lazytainer.group.minio.inactiveTimeout=1800"

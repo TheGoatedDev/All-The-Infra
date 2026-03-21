@@ -4,24 +4,15 @@ services:
     image: grafana/otel-lgtm:latest
     volumes:
       - lgtm-data:/data
-    ports:
-      - "4316:3000"
-      - "4317:4317"
-      - "4318:4318"
-    networks:
-      - monitoring-network
-      - database-network
-      - queue-network
-      - mail-network
     deploy:
       resources:
         limits:
           memory: 1G
-
-
-networks:
-  monitoring-network:
-    driver: bridge
+    network_mode: service:lazytainer
+    depends_on:
+      - lazytainer
+    labels:
+      - "lazytainer.group=lgtm"
 
 volumes:
   lgtm-data:
