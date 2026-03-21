@@ -24,8 +24,8 @@ From your application's perspective, nothing changes — same ports, same connec
 | Service | Port | Connection |
 |---------|------|------------|
 | PostgreSQL | 5432 | `postgres://postgres:password@localhost:5432` |
-| MySQL | 3306 | `mysql://root:password@localhost:3306/development` |
-| Redis | 6379 | `redis://localhost:6379` |
+| MariaDB | 3306 | `mysql://root:password@localhost:3306/development` |
+| Dragonfly | 6379 | `redis://localhost:6379` (Redis-compatible) |
 | MongoDB | 27017 | `mongodb://localhost:27017` |
 | InfluxDB | 8086 | `http://localhost:8086` |
 | ClickHouse | 8123 | `http://localhost:8123` (HTTP interface) |
@@ -40,7 +40,7 @@ From your application's perspective, nothing changes — same ports, same connec
 ### Mail
 | Service | Port(s) | Connection |
 |---------|---------|------------|
-| MailHog | 1025 (SMTP), 8025 (Web UI) | `smtp://localhost:1025` |
+| Mailpit | 1025 (SMTP), 8025 (Web UI) | `smtp://localhost:1025` |
 
 ### Monitoring
 | Service | Port(s) | Connection |
@@ -59,10 +59,10 @@ When a service isn't running and you first connect, there is a startup delay:
 
 | Service | Typical Startup Time |
 |---------|---------------------|
-| Redis | ~1-2 seconds |
+| Dragonfly | ~1-2 seconds |
 | PostgreSQL | ~2-5 seconds |
 | MongoDB | ~3-8 seconds |
-| MySQL | ~5-15 seconds |
+| MariaDB | ~5-15 seconds |
 | ClickHouse | ~3-10 seconds |
 | Redpanda | ~5-15 seconds |
 | RabbitMQ | ~5-15 seconds |

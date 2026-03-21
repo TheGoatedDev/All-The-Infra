@@ -1,7 +1,16 @@
 version: '3.8'
 services:
-  mailing-mailhog:
-    image: 'mailhog/mailhog'
+  mailing-mailpit:
+    image: 'axllent/mailpit:latest'
+    environment:
+      MP_DATABASE: /data/mailpit.db
+    volumes:
+      - 'mailpit-data:/data'
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "--fail", "--max-time", "5", "http://localhost:8025/readyz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     deploy:
       resources:
         limits:
@@ -10,4 +19,7 @@ services:
     depends_on:
       - lazytainer
     labels:
-      - "lazytainer.group=mailhog"
+      - "lazytainer.group=mailpit"
+
+volumes:
+  mailpit-data:

@@ -23,18 +23,19 @@ services:
     labels:
       - "lazytainer.group=postgres"
 
-  data-mysql:
-    image: "mysql:latest"
+  data-mariadb:
+    image: "mariadb:latest"
     environment:
-      MYSQL_ROOT_PASSWORD: "password"
-      MYSQL_DATABASE: "development"
+      MARIADB_ROOT_PASSWORD: "password"
+      MARIADB_DATABASE: "development"
     volumes:
-      - "mysql-data:/var/lib/mysql"
+      - "mariadb-data:/var/lib/mysql"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ppassword"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -43,13 +44,14 @@ services:
     depends_on:
       - lazytainer
     labels:
-      - "lazytainer.group=mysql"
+      - "lazytainer.group=mariadb"
 
-  data-redis:
-    image: "redis:alpine"
+  data-dragonfly:
+    image: "docker.dragonflydb.io/dragonflydb/dragonfly:latest"
     volumes:
-      - "redis-data:/data"
-    command: redis-server --appendonly yes
+      - "dragonfly-data:/data"
+    ulimits:
+      memlock: -1
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -63,7 +65,7 @@ services:
     depends_on:
       - lazytainer
     labels:
-      - "lazytainer.group=redis"
+      - "lazytainer.group=dragonfly"
 
   data-mongo:
     image: "mongo:latest"
@@ -135,8 +137,8 @@ services:
 
 volumes:
   pg-data:
-  mysql-data:
+  mariadb-data:
   mongo-data:
   influxdb_data:
-  redis-data:
+  dragonfly-data:
   clickhouse-data:

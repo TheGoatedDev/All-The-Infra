@@ -35,18 +35,18 @@ services:
       - "lazytainer.group.postgres.inactiveTimeout=1800"
       - "lazytainer.group.postgres.minPacketThreshold=0"
       - "lazytainer.group.postgres.pollRate=5"
-      # MySQL
-      - "lazytainer.group.mysql.ports=3306"
-      - "lazytainer.group.mysql.sleepMethod=stop"
-      - "lazytainer.group.mysql.inactiveTimeout=1800"
-      - "lazytainer.group.mysql.minPacketThreshold=0"
-      - "lazytainer.group.mysql.pollRate=5"
-      # Redis
-      - "lazytainer.group.redis.ports=6379"
-      - "lazytainer.group.redis.sleepMethod=stop"
-      - "lazytainer.group.redis.inactiveTimeout=1800"
-      - "lazytainer.group.redis.minPacketThreshold=0"
-      - "lazytainer.group.redis.pollRate=5"
+      # MariaDB
+      - "lazytainer.group.mariadb.ports=3306"
+      - "lazytainer.group.mariadb.sleepMethod=stop"
+      - "lazytainer.group.mariadb.inactiveTimeout=1800"
+      - "lazytainer.group.mariadb.minPacketThreshold=0"
+      - "lazytainer.group.mariadb.pollRate=5"
+      # Dragonfly
+      - "lazytainer.group.dragonfly.ports=6379"
+      - "lazytainer.group.dragonfly.sleepMethod=stop"
+      - "lazytainer.group.dragonfly.inactiveTimeout=1800"
+      - "lazytainer.group.dragonfly.minPacketThreshold=0"
+      - "lazytainer.group.dragonfly.pollRate=5"
       # MongoDB
       - "lazytainer.group.mongo.ports=27017"
       - "lazytainer.group.mongo.sleepMethod=stop"
@@ -83,12 +83,12 @@ services:
       - "lazytainer.group.nats.inactiveTimeout=1800"
       - "lazytainer.group.nats.minPacketThreshold=0"
       - "lazytainer.group.nats.pollRate=5"
-      # MailHog
-      - "lazytainer.group.mailhog.ports=1025,8025"
-      - "lazytainer.group.mailhog.sleepMethod=stop"
-      - "lazytainer.group.mailhog.inactiveTimeout=1800"
-      - "lazytainer.group.mailhog.minPacketThreshold=0"
-      - "lazytainer.group.mailhog.pollRate=5"
+      # Mailpit
+      - "lazytainer.group.mailpit.ports=1025,8025"
+      - "lazytainer.group.mailpit.sleepMethod=stop"
+      - "lazytainer.group.mailpit.inactiveTimeout=1800"
+      - "lazytainer.group.mailpit.minPacketThreshold=0"
+      - "lazytainer.group.mailpit.pollRate=5"
       # LGTM (Grafana on internal port 3000, OTLP on 4317/4318)
       - "lazytainer.group.lgtm.ports=3000,4317,4318"
       - "lazytainer.group.lgtm.sleepMethod=stop"
