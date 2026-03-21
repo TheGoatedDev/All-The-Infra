@@ -48,6 +48,7 @@ services:
 
   data-dragonfly:
     image: "docker.dragonflydb.io/dragonflydb/dragonfly:latest"
+    command: ["--proactor_threads=1"]
     volumes:
       - "dragonfly-data:/data"
     ulimits:
