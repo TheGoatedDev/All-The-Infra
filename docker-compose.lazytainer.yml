@@ -33,46 +33,68 @@ services:
       - "lazytainer.group.postgres.ports=5432"
       - "lazytainer.group.postgres.sleepMethod=stop"
       - "lazytainer.group.postgres.inactiveTimeout=1800"
+      - "lazytainer.group.postgres.minPacketThreshold=0"
+      - "lazytainer.group.postgres.pollRate=5"
       # MySQL
       - "lazytainer.group.mysql.ports=3306"
       - "lazytainer.group.mysql.sleepMethod=stop"
       - "lazytainer.group.mysql.inactiveTimeout=1800"
+      - "lazytainer.group.mysql.minPacketThreshold=0"
+      - "lazytainer.group.mysql.pollRate=5"
       # Redis
       - "lazytainer.group.redis.ports=6379"
       - "lazytainer.group.redis.sleepMethod=stop"
       - "lazytainer.group.redis.inactiveTimeout=1800"
+      - "lazytainer.group.redis.minPacketThreshold=0"
+      - "lazytainer.group.redis.pollRate=5"
       # MongoDB
       - "lazytainer.group.mongo.ports=27017"
       - "lazytainer.group.mongo.sleepMethod=stop"
       - "lazytainer.group.mongo.inactiveTimeout=1800"
+      - "lazytainer.group.mongo.minPacketThreshold=0"
+      - "lazytainer.group.mongo.pollRate=5"
       # InfluxDB
       - "lazytainer.group.influxdb.ports=8086"
       - "lazytainer.group.influxdb.sleepMethod=stop"
       - "lazytainer.group.influxdb.inactiveTimeout=1800"
+      - "lazytainer.group.influxdb.minPacketThreshold=0"
+      - "lazytainer.group.influxdb.pollRate=5"
       # ClickHouse (HTTP only, native port 9000 not proxied)
       - "lazytainer.group.clickhouse.ports=8123"
       - "lazytainer.group.clickhouse.sleepMethod=stop"
       - "lazytainer.group.clickhouse.inactiveTimeout=1800"
+      - "lazytainer.group.clickhouse.minPacketThreshold=0"
+      - "lazytainer.group.clickhouse.pollRate=5"
       # Redpanda
       - "lazytainer.group.redpanda.ports=9092"
       - "lazytainer.group.redpanda.sleepMethod=stop"
       - "lazytainer.group.redpanda.inactiveTimeout=1800"
+      - "lazytainer.group.redpanda.minPacketThreshold=0"
+      - "lazytainer.group.redpanda.pollRate=5"
       # RabbitMQ
       - "lazytainer.group.rabbitmq.ports=5672,15672"
       - "lazytainer.group.rabbitmq.sleepMethod=stop"
       - "lazytainer.group.rabbitmq.inactiveTimeout=1800"
+      - "lazytainer.group.rabbitmq.minPacketThreshold=0"
+      - "lazytainer.group.rabbitmq.pollRate=5"
       # NATS
       - "lazytainer.group.nats.ports=4222,8222,6222"
       - "lazytainer.group.nats.sleepMethod=stop"
       - "lazytainer.group.nats.inactiveTimeout=1800"
+      - "lazytainer.group.nats.minPacketThreshold=0"
+      - "lazytainer.group.nats.pollRate=5"
       # MailHog
       - "lazytainer.group.mailhog.ports=1025,8025"
       - "lazytainer.group.mailhog.sleepMethod=stop"
       - "lazytainer.group.mailhog.inactiveTimeout=1800"
+      - "lazytainer.group.mailhog.minPacketThreshold=0"
+      - "lazytainer.group.mailhog.pollRate=5"
       # LGTM (Grafana on internal port 3000, OTLP on 4317/4318)
       - "lazytainer.group.lgtm.ports=3000,4317,4318"
       - "lazytainer.group.lgtm.sleepMethod=stop"
       - "lazytainer.group.lgtm.inactiveTimeout=1800"
+      - "lazytainer.group.lgtm.minPacketThreshold=0"
+      - "lazytainer.group.lgtm.pollRate=5"
 
   lazytainer-storage:
     image: ghcr.io/vmorganp/lazytainer:master
@@ -87,3 +109,5 @@ services:
       - "lazytainer.group.minio.ports=9000,9001"
       - "lazytainer.group.minio.sleepMethod=stop"
       - "lazytainer.group.minio.inactiveTimeout=1800"
+      - "lazytainer.group.minio.minPacketThreshold=0"
+      - "lazytainer.group.minio.pollRate=5"
