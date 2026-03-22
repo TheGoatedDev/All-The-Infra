@@ -51,7 +51,7 @@ From your application's perspective, nothing changes — same ports, same connec
 ### Storage
 | Service | Port(s) | Connection |
 |---------|---------|------------|
-| MinIO | 9000 (API), 9001 (Console) | `http://localhost:9000` |
+| SeaweedFS | 8333 (S3 API), 8888 (Filer UI) | `http://localhost:8333` |
 
 ## Cold Start Delay
 
@@ -77,7 +77,6 @@ docker compose ps
 
 # Check Lazytainer proxy logs
 docker compose logs lazytainer
-docker compose logs lazytainer-storage
 
 # Manually start a service (bypass lazy loading)
 docker compose start data-postgres
@@ -123,6 +122,4 @@ Your App → localhost:5432 → Lazytainer (proxy) → detects traffic → start
                                                                   → 30 min idle → stops Postgres
 ```
 
-Two Lazytainer instances run:
-- **lazytainer**: Manages all services except MinIO
-- **lazytainer-storage**: Manages MinIO (separate instance to avoid internal port conflict with ClickHouse)
+One Lazytainer instance manages all services. SeaweedFS uses different ports than ClickHouse so no conflicts.

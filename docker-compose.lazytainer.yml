@@ -2,6 +2,7 @@ version: '3.8'
 services:
   lazytainer:
     image: ghcr.io/vmorganp/lazytainer:master
+    restart: unless-stopped
     environment:
       - VERBOSE=false
     ports:
@@ -26,6 +27,9 @@ services:
       - "4316:3000"
       - "4317:4317"
       - "4318:4318"
+      # Storage (SeaweedFS S3 API + Filer UI)
+      - "8333:8333"
+      - "8888:8888"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
@@ -95,19 +99,9 @@ services:
       - "lazytainer.group.lgtm.inactiveTimeout=1800"
       - "lazytainer.group.lgtm.minPacketThreshold=1"
       - "lazytainer.group.lgtm.pollRate=5"
-
-  lazytainer-storage:
-    image: ghcr.io/vmorganp/lazytainer:master
-    environment:
-      - VERBOSE=false
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - "lazytainer.group.minio.ports=9000,9001"
-      - "lazytainer.group.minio.sleepMethod=stop"
-      - "lazytainer.group.minio.inactiveTimeout=1800"
-      - "lazytainer.group.minio.minPacketThreshold=1"
-      - "lazytainer.group.minio.pollRate=5"
+      # SeaweedFS (S3 API on 8333, Filer UI on 8888)
+      - "lazytainer.group.seaweedfs.ports=8333,8888"
+      - "lazytainer.group.seaweedfs.sleepMethod=stop"
+      - "lazytainer.group.seaweedfs.inactiveTimeout=1800"
+      - "lazytainer.group.seaweedfs.minPacketThreshold=1"
+      - "lazytainer.group.seaweedfs.pollRate=5"
